@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fa">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>مدت آشناییمون ❤️</title>
+<style>
+  body{font-family:"Tahoma","Vazir",sans-serif;direction:rtl;padding:20px;background:linear-gradient(135deg,#fff7f0,#fff0fb);color:#222;}
+  .card{max-width:640px;margin:40px auto;padding:22px;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,0.08);background:white;}
+  h1{margin:0 0 12px;font-size:22px;text-align:center;}
+  .time{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+  .part{flex:1 1 120px;padding:12px;border-radius:10px;background:#faf8ff;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
+  .num{font-size:22px;font-weight:700;}
+  .label{font-size:13px;color:#666;margin-top:6px;}
+  .small{font-size:13px;color:#666;margin-top:10px;text-align:center;}
+  .muted{color:#888;font-size:13px;text-align:center;margin-top:8px;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>❤️مدت آشناییمون تا الان❤️</h1>
+
+    <div class="time" id="timeParts"></div>
+
+    <div class="small" id="sinceText"></div>
+    <div class="muted" id="nowText"></div>
+
+    <div class="muted">صفحه هر ثانیه بروزرسانی می‌شود 🌙</div>
+  </div>
+
+<script>
+const START_DATE = new Date("2020-11-14T04:02:00");
+
+function computeElapsed(start, now) {
+  let sy = start.getFullYear(), sm = start.getMonth(), sd = start.getDate();
+  let sh = start.getHours(), smin = start.getMinutes(), ss = start.getSeconds();
+  let ny = now.getFullYear(), nm = now.getMonth(), nd = now.getDate();
+  let nh = now.getHours(), nmin = now.getMinutes(), ns = now.getSeconds();
+
+  let years = ny - sy;
+  let months = nm - sm;
+  let days = nd - sd;
+  let hours = nh - sh;
+  let minutes = nmin - smin;
+  let seconds = ns - ss;
+
+  if (seconds < 0) { seconds += 60; minutes -= 1; }
+  if (minutes < 0) { minutes += 60; hours -= 1; }
+  if (hours < 0) { hours += 24; days -= 1; }
+  if (days < 0) {
+    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+    days += prevMonth.getDate();
+    months -= 1;
+  }
+  if (months < 0) { months += 12; years -= 1; }
+  return { years, months, days, hours, minutes, seconds };
+}
+
+function update() {
+  const now = new Date();
+  const e = computeElapsed(START_DATE, now);
+  const parts = [
+    {k:'years', label:'سال'},
+    {k:'months', label:'ماه'},
+    {k:'days', label:'روز'},
+    {k:'hours', label:'ساعت'},
+    {k:'minutes', label:'دقیقه'},
+    {k:'seconds', label:'ثانیه'}
+  ];
+  document.getElementById("timeParts").innerHTML = parts.map(p =>
+    `<div class="part"><div class="num">${e[p.k]}</div><div class="label">${p.label}</div></div>`
+  ).join('');
+  document.getElementById("sinceText").textContent = "از: " + START_DATE.toLocaleString("fa-IR");
+  document.getElementById("nowText").textContent = "الان: " + now.toLocaleString("fa-IR");
+}
+
+update();
+setInterval(update, 1000);
+</script>
+</body>
+</html>
